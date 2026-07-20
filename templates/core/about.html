@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About - Shato Sports Bar{% endblock %}
+
+{% block content %}
+
+<section class="page">
+    <div class="container">
+        <h1>About Shato</h1>
+        <p>
+            Shato Sports Bar started as a local hangout for Mvurwi. We don't do
+            big screens &mdash; we do pool, cold drinks, and real conversation.
+            It's where farmers, teachers, and everyone in between meet after work.
+        </p>
+        <p>
+            Come through for a game of 8-ball, grab a cold one, and be part of
+            the community.
+        </p>
+
+        <!-- Drop a real photo at static/img/pub.jpg to replace this -->
+        <img src="{% static 'img/pub.jpg' %}" alt="Inside Shato Sports Bar" class="img-round">
+    </div>
+</section>
+
+{% endblock %}

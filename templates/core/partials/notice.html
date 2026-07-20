@@ -1,0 +1,15 @@
+{% load static %}
+{% if notice %}
+<section class="notice" aria-live="polite">
+    <div class="container">
+        <h3>📢 {{ notice.title }}</h3>
+        <p>{{ notice.body }}</p>
+        {% if notice.flyer %}
+        <img src="{{ notice.flyer.url }}" alt="{{ notice.title }} flyer" class="notice__flyer">
+        {% endif %}
+        {% if notice.end_date %}
+        <small>Runs until {{ notice.end_date|date:"D, d M" }}</small>
+        {% endif %}
+    </div>
+</section>
+{% endif %}

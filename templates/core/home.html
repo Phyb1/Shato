@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Shato Sports Bar - Mvurwi{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <div class="container">
+        <h1>POOL. DRINKS. GOOD COMPANY.</h1>
+        <p>Your local pub joint in the heart of Mvurwi. Two pool tables, ice-cold drinks, and a place to unwind.</p>
+        <a href="#contact" class="btn">Find Us</a>
+    </div>
+</section>
+
+<!-- Current notice: rendered on first load, then polled via HTMX so it
+     can change (e.g. a new tournament posted in the admin) without the
+     visitor refreshing the page. -->
+<div id="notice-slot"
+     hx-get="{% url 'latest-notice' %}"
+     hx-trigger="every 60s"
+     hx-swap="innerHTML">
+    {% include "core/partials/notice.html" %}
+</div>
+
+<section class="features">
+    <div class="container">
+        <h2>What we're about</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>🎱 Pool Tables</h3>
+                <p>Two full-size tables. Challenge your mates - winner stays on.</p>
+            </div>
+            <div class="card">
+                <h3>🍺 Cold Drinks</h3>
+                <p>Castle, Zambezi, and spirits, always served ice cold.</p>
+            </div>
+            <div class="card">
+                <h3>🤝 Local Vibes</h3>
+                <p>A relaxed spot to catch up with friends after work or on weekends.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="contact">
+    <div class="container">
+        <h2>Find Us</h2>
+        <p>Shato Sports Bar, Mvurwi, Mashonaland Central</p>
+        <!-- TODO: replace with the bar's real opening hours and contact details -->
+        <p>Open daily &mdash; details coming soon.</p>
+    </div>
+</section>
+
+{% endblock %}

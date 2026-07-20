@@ -1,0 +1,6 @@
+Add the site's real images here, e.g.:
+  logo.png  - used as the browser favicon
+  pub.jpg   - used on the About page
+
+Nothing renders broken without them, but the icon/photo spots stay
+empty until real files are added.

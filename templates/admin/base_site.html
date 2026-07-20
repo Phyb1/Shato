@@ -1,0 +1,42 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">🎱 Shato Sports Bar Admin</a></h1>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    :root {
+        --primary: #1a1a1a;
+        --secondary: #fbbf24;
+        --accent: #fbbf24;
+    }
+    #header {
+        background: var(--primary);
+        border-bottom: 3px solid var(--secondary);
+        color: #f1f1f1;
+    }
+    #branding h1, #branding h1 a:link, #branding h1 a:visited {
+        color: var(--secondary);
+    }
+    div.breadcrumbs {
+        background: #262626;
+        color: #f1f1f1;
+    }
+    .button, input[type=submit], input[type=button], .submit-row input, a.button {
+        background: var(--secondary);
+        color: #000;
+        border: none;
+    }
+    .button:hover, input[type=submit]:hover {
+        background: #e0a824;
+    }
+    .module h2, .module caption, .inline-group h2 {
+        background: var(--primary);
+        color: var(--secondary);
+    }
+</style>
+{% endblock %}

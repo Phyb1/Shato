@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shato Sports Bar - the local pub joint in Mvurwi. Pool tables, cold drinks, good company.">
+    <title>{% block title %}Shato Sports Bar{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" href="{% static 'img/logo.png' %}">
+
+    <!-- HTMX: used only for the small "current notice" auto-refresh on Home -->
+    <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+
+    <!-- Theme + mobile-menu logic. Runs before paint (not deferred) to
+         avoid a flash of the wrong theme; see static/js/app.js. -->
+    <script src="{% static 'js/app.js' %}"></script>
+</head>
+<body>
+
+    <!-- Header / mobile-first nav -->
+    <header class="navbar">
+        <div class="container navbar__row">
+            <a href="{% url 'home' %}" class="brand">SHATO <span>SPORTS BAR</span></a>
+
+            <button id="theme-toggle" class="icon-btn" aria-label="Toggle dark/light theme" type="button">🌙</button>
+            <button id="hamburger" class="icon-btn hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links" type="button">☰</button>
+        </div>
+        <nav id="nav-links" class="nav-links">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'about' %}">About</a>
+            <a href="{% url 'home' %}#contact">Find Us</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; {% now "Y" %} Shato Sports Bar</p>
+            <p>Mvurwi, Mashonaland Central, Zimbabwe</p>
+        </div>
+    </footer>
+
+</body>
+</html>

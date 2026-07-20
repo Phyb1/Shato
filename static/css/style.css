@@ -1,0 +1,283 @@
+/* =========================================================
+   Shato Sports Bar — stylesheet
+   Mobile-first: base rules target small screens; the single
+   media query near the bottom scales up for tablet/desktop.
+   ========================================================= */
+
+/* ---- Theme tokens ---- */
+:root,
+[data-theme="dark"] {
+    --bg: #0a0a0a;
+    --bg-alt: #151515;
+    --card: #1a1a1a;
+    --text: #f1f1f1;
+    --text-muted: #a3a3a3;
+    --accent: #fbbf24;
+    --accent-contrast: #000000;
+    --border: #2a2a2a;
+}
+
+[data-theme="light"] {
+    --bg: #f8f8f6;
+    --bg-alt: #ffffff;
+    --card: #ffffff;
+    --text: #171717;
+    --text-muted: #525252;
+    --accent: #b45309;
+    --accent-contrast: #ffffff;
+    --border: #e5e5e5;
+}
+
+/* ---- Reset ---- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    /* Smooth theme switching */
+    color-scheme: dark light;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.6;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+a {
+    color: inherit;
+}
+
+/* ---- Navbar (mobile-first: stacked, hamburger-driven) ---- */
+.navbar {
+    background: var(--bg-alt);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 50;
+    border-bottom: 1px solid var(--border);
+}
+
+.navbar__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 0;
+}
+
+.brand {
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+
+.brand span {
+    color: var(--text);
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: var(--text);
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    line-height: 1;
+}
+
+.nav-links {
+    display: none;
+    flex-direction: column;
+    background: var(--bg-alt);
+    border-top: 1px solid var(--border);
+}
+
+.nav-links.is-open {
+    display: flex;
+}
+
+.nav-links a {
+    text-decoration: none;
+    padding: 0.9rem 5%;
+    border-bottom: 1px solid var(--border);
+}
+
+.nav-links a:hover {
+    color: var(--accent);
+}
+
+/* ---- Hero ---- */
+.hero {
+    padding: 7rem 0 3rem;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 1.9rem;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+}
+
+.hero p {
+    color: var(--text-muted);
+    max-width: 40ch;
+    margin: 0 auto;
+}
+
+.btn {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    padding: 0.8rem 1.6rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    margin-top: 1.25rem;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+/* ---- Notice band (HTMX-refreshed) ---- */
+.notice {
+    background: var(--accent);
+    color: var(--accent-contrast);
+    padding: 1.1rem 0;
+    text-align: center;
+    font-weight: 600;
+}
+
+.notice h3 {
+    margin-bottom: 0.35rem;
+}
+
+.notice small {
+    display: inline-block;
+    margin-top: 0.4rem;
+    opacity: 0.8;
+}
+
+.notice__flyer {
+    max-width: 260px;
+    margin: 0.75rem auto 0;
+    border-radius: 8px;
+}
+
+/* ---- Features grid ---- */
+.features {
+    padding: 3rem 0;
+}
+
+.features h2,
+.contact h2,
+.page h1 {
+    margin-bottom: 1.25rem;
+}
+
+.grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    border-radius: 10px;
+}
+
+.card h3 {
+    margin-bottom: 0.5rem;
+}
+
+/* ---- Contact / find-us ---- */
+.contact {
+    background: var(--bg-alt);
+    padding: 3rem 0;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+/* ---- Generic content page (About) ---- */
+.page {
+    padding: 6rem 0 3rem;
+}
+
+.page p {
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+    max-width: 65ch;
+}
+
+.img-round {
+    border-radius: 10px;
+    margin-top: 1rem;
+}
+
+/* ---- Footer ---- */
+.footer {
+    text-align: center;
+    padding: 2rem 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+}
+
+/* ---- Tablet / desktop ---- */
+@media (min-width: 768px) {
+    .navbar__row {
+        padding: 1rem 0;
+    }
+
+    .hamburger {
+        display: none;
+    }
+
+    .nav-links {
+        display: flex !important;
+        flex-direction: row;
+        position: static;
+        width: auto;
+        background: none;
+        border: none;
+    }
+
+    .nav-links a {
+        border-bottom: none;
+        padding: 0.5rem 1rem;
+    }
+
+    .hero {
+        padding: 9rem 0 4rem;
+    }
+
+    .hero h1 {
+        font-size: 3rem;
+    }
+
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
