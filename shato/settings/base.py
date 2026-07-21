@@ -1,32 +1,35 @@
 """
-Django settings for the Shato Sports Bar project.
+Django base settings for the Shato Sports Bar project.
+
+This file holds everything that is identical across environments.
+`dev.py` and `prod.py` both start with `from .base import *` and then
+override only what needs to differ (DEBUG, ALLOWED_HOSTS, database,
+security headers, etc.).
 
 This project is intentionally small: two public pages (Home, About),
 a Notice model editable from a branded admin, and HTMX used to
 refresh the "notices" section without a full page reload.
 """
 
-import os
 from pathlib import Path
 
+from decouple import Csv, config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# base.py lives in shato/settings/, so BASE_DIR is two levels up.
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # -----------------------------------------------------------------------
 # SECURITY
 # -----------------------------------------------------------------------
-# NOTE: Replace SECRET_KEY with a unique value (and load it from an
-# environment variable) before deploying to production.
-SECRET_KEY = os.environ.get(
-    "DJANGO_SECRET_KEY",
-    "django-insecure-CHANGE-ME-before-deploying",
-)
+# SECRET_KEY has no default: if it's missing from the environment,
+# decouple raises an error immediately instead of falling back to an
+# insecure placeholder. Set it in your .env file (see .env.example).
+SECRET_KEY = config("DJANGO_SECRET_KEY")
 
-# NOTE: Set this to False in production, and set ALLOWED_HOSTS below.
-DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
-
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+# DEBUG and ALLOWED_HOSTS are deliberately NOT set here — they differ
+# per environment and are defined in dev.py / prod.py instead.
 
 
 # -----------------------------------------------------------------------
@@ -74,19 +77,6 @@ WSGI_APPLICATION = "shato.wsgi.application"
 
 
 # -----------------------------------------------------------------------
-# DATABASE
-# -----------------------------------------------------------------------
-# SQLite is fine for a small single-location site. Swap for Postgres in
-# production by changing this dict (e.g. via dj-database-url).
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
-
-# -----------------------------------------------------------------------
 # PASSWORD VALIDATION
 # -----------------------------------------------------------------------
 AUTH_PASSWORD_VALIDATORS = [
@@ -103,7 +93,8 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = "en-us"
 
 # Shato Sports Bar is in Mvurwi, Zimbabwe (Africa/Harare timezone).
-TIME_ZONE = "Africa/Harare"
+# Overridable via env in case a staging server runs in another region.
+TIME_ZONE = config("DJANGO_TIME_ZONE", default="Africa/Harare")
 
 USE_I18N = True
 USE_TZ = True
@@ -131,3 +122,12 @@ MEDIA_ROOT = BASE_DIR / "media"
 # DEFAULT PRIMARY KEY FIELD TYPE
 # -----------------------------------------------------------------------
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# -----------------------------------------------------------------------
+# Shared helper used by dev.py / prod.py
+# -----------------------------------------------------------------------
+# Exposed here so both subclasses can build ALLOWED_HOSTS / CSRF_TRUSTED_ORIGINS
+# from the same env-parsing utility without re-importing decouple everywhere.
+def env_list(key, default=""):
+    return config(key, default=default, cast=Csv())
