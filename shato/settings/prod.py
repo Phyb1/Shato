@@ -46,6 +46,30 @@ X_FRAME_OPTIONS = "DENY"
 
 
 # -----------------------------------------------------------------------
+# STATIC FILES (served by WhiteNoise)
+# -----------------------------------------------------------------------
+# On shared hosting there's usually no nginx/Apache config you control
+# for serving /static/ efficiently in front of Passenger, so WhiteNoise
+# serves compressed, cache-friendly static files straight from the
+# Python process itself. Must sit directly after SecurityMiddleware.
+MIDDLEWARE = list(MIDDLEWARE)
+MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
+
+# Adds hashed filenames + gzip/Brotli precompression via `collectstatic`,
+# and lets the browser cache static files essentially forever.
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+# WhiteNoise re-checks the filesystem on every request in dev-style
+# setups; on cPanel the app process is long-lived, so this just needs
+# collectstatic to have been run after each deploy.
+WHITENOISE_USE_FINDERS = False
+
+
+# -----------------------------------------------------------------------
 # DATABASE
 # -----------------------------------------------------------------------
 # SQLite is fine here too — a small single-location site on shared
