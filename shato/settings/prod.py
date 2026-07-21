@@ -57,12 +57,12 @@ MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 
 # Adds hashed filenames + gzip/Brotli precompression via `collectstatic`,
 # and lets the browser cache static files essentially forever.
-STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
-
+#STORAGES = {
+#   "staticfiles": {
+#        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#   },
+#}
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 # WhiteNoise re-checks the filesystem on every request in dev-style
 # setups; on cPanel the app process is long-lived, so this just needs
 # collectstatic to have been run after each deploy.
