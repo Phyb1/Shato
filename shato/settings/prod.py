@@ -1,37 +1,13 @@
-"""
-Production settings for the Shato Sports Bar project.
-
-Written for cPanel shared hosting via Phusion Passenger, where the
-app server just imports `application` from wsgi.py / passenger_wsgi.py
-— there's no separate `gunicorn` process to point at a settings
-module, so this file is selected directly by import (see wsgi.py).
-
-SECRET_KEY and ALLOWED_HOSTS are still required from the environment —
-if they're missing, decouple raises an error at startup rather than
-silently falling back to something insecure. Everything else has a
-sane shared-hosting default.
-"""
-
 from decouple import config
 
 from .base import *  # noqa: F401,F403
 from .base import BASE_DIR, env_list
 
-# -----------------------------------------------------------------------
 # SECURITY
-# -----------------------------------------------------------------------
 DEBUG = False
-
-# No default here on purpose: production must explicitly list its hosts,
-# e.g. shatosportsbar.com,www.shatosportsbar.com
 ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS")
-
 CSRF_TRUSTED_ORIGINS = env_list("DJANGO_CSRF_TRUSTED_ORIGINS")
 
-# cPanel/Apache terminates SSL and proxies to Passenger. Whether it sets
-# X-Forwarded-Proto depends on the host's config, so this defaults to
-# OFF to avoid a redirect loop — turn it on in .env once you've
-# confirmed (via a test request) that the header is being forwarded.
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = config("DJANGO_SECURE_SSL_REDIRECT", default=False, cast=bool)
 SESSION_COOKIE_SECURE = config("DJANGO_SECURE_SSL_REDIRECT", default=False, cast=bool)
@@ -44,30 +20,16 @@ SECURE_HSTS_PRELOAD = SECURE_HSTS_SECONDS > 0
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
 
-
-# -----------------------------------------------------------------------
 # STATIC FILES (served by WhiteNoise)
-# -----------------------------------------------------------------------
-# On shared hosting there's usually no nginx/Apache config you control
-# for serving /static/ efficiently in front of Passenger, so WhiteNoise
-# serves compressed, cache-friendly static files straight from the
-# Python process itself. Must sit directly after SecurityMiddleware.
 MIDDLEWARE = list(MIDDLEWARE)
 MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
-# Static files
+
 STATIC_URL = '/shato/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-
-# -----------------------------------------------------------------------
 # DATABASE
-# -----------------------------------------------------------------------
-# SQLite is fine here too — a small single-location site on shared
-# hosting doesn't need Postgres. Just make sure the db file lives
-# outside your public_html docroot and is writable by the hosting
-# account's user (see the deployment note in .env.example).
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -75,10 +37,7 @@ DATABASES = {
     }
 }
 
-
-# -----------------------------------------------------------------------
 # EMAIL
-# -----------------------------------------------------------------------
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = config("EMAIL_HOST", default="")
 EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
@@ -87,19 +46,17 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="no-reply@shatosportsbar.com")
 
-
-# -----------------------------------------------------------------------
 # LOGGING
-# -----------------------------------------------------------------------
-# Send warnings and errors to stdout/stderr so a process manager
-# (systemd, Docker, a PaaS) can capture and aggregate them.
+LOG_DIR = BASE_DIR / "logs"
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {
         "file": {
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": BASE_DIR / "logs" / "django.log",
+            "filename": LOG_DIR / "django.log",
             "maxBytes": 5 * 1024 * 1024,
             "backupCount": 3,
         },
