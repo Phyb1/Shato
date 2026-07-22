@@ -54,19 +54,11 @@ X_FRAME_OPTIONS = "DENY"
 # Python process itself. Must sit directly after SecurityMiddleware.
 MIDDLEWARE = list(MIDDLEWARE)
 MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
-
-# Adds hashed filenames + gzip/Brotli precompression via `collectstatic`,
-# and lets the browser cache static files essentially forever.
-#STORAGES = {
-#   "staticfiles": {
-#        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-#   },
-#}
-STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
-# WhiteNoise re-checks the filesystem on every request in dev-style
-# setups; on cPanel the app process is long-lived, so this just needs
-# collectstatic to have been run after each deploy.
-WHITENOISE_USE_FINDERS = False
+# Static files
+STATIC_URL = '/shato/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # -----------------------------------------------------------------------
