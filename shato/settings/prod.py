@@ -97,17 +97,20 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
+        "file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": BASE_DIR / "logs" / "django.log",
+            "maxBytes": 5 * 1024 * 1024,
+            "backupCount": 3,
         },
     },
     "root": {
-        "handlers": ["console"],
+        "handlers": ["file"],
         "level": "WARNING",
     },
     "loggers": {
         "django": {
-            "handlers": ["console"],
+            "handlers": ["file"],
             "level": "INFO",
             "propagate": False,
         },
